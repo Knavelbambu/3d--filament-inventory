@@ -18,7 +18,8 @@ export default function App() {
   const [form, setForm] = useState({
     brand: '',
     material: 'PLA',
-    color: '',
+    color: 
+    colorHex: '#808080',  
     weight: '1000',
     cost: '',
     quantity: '1'
@@ -200,7 +201,11 @@ colorHex: '#808080',
 
             <section className="panel">
               <h2>Recent Inventory</h2>
-              <InventoryTable items={filtered.slice(0, 8)} />
+              <InventoryTable
+  items={filtered.slice(0, 8)}
+  onEdit={handleEdit}
+  onDelete={handleDelete}
+/>
             </section>
           </>
         )}
@@ -215,7 +220,11 @@ colorHex: '#808080',
                 onChange={e => setSearch(e.target.value)}
               />
             </div>
-            <InventoryTable items={filtered} />
+            <InventoryTable
+  items={filtered}
+  onEdit={handleEdit}
+  onDelete={handleDelete}
+/>
           </section>
         )}
 
@@ -273,9 +282,6 @@ colorHex: '#808080',
     onChange={e => setForm({...form, brand: e.target.value})}
   />
 )}
-
-
-This gives you a visible dropdown of saved brands and a field for
 
               <label>Material</label>
               <div>
@@ -369,7 +375,7 @@ This gives you a visible dropdown of saved brands and a field for
   );
 }
 
-function InventoryTable({ items }) {
+function InventoryTable({ items, onEdit, onDelete }) {
   if (!items.length) return <p className="empty">No filament added yet.</p>;
 
   return (

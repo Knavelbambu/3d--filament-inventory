@@ -18,8 +18,8 @@ export default function App() {
   const [form, setForm] = useState({
     brand: '',
     material: 'PLA',
-    color: 
-    colorHex: '#808080',  
+    color: '',
+colorHex: '#808080',  
     weight: '1000',
     cost: '',
     quantity: '1'

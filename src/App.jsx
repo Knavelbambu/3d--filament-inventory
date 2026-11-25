@@ -364,26 +364,43 @@ colorHex: '#808080',
           </section>
         )}
 
-        <h3>Colors</h3>
-    {colors.map(color => (
-      <div key={color} className="form-actions">
-        <span>{color}</span>
-        <button
-          className="secondary"
-          onClick={() => renameListItem('color', color)}
-        >
-          Rename
-        </button>
-        <button
-          className="secondary"
-          onClick={() => deleteListItem('color', color)}
-        >
-          Delete
-        </button>
-      </div>
-    ))}
-  </section>
-)}
+        {page === 'Settings' && (
+          <section className="panel">
+            <h2>Settings</h2>
+            <p>Inventory data is currently saved in this browser.</p>
+            <p>Windows 11 companion integration: Planned.</p>
+
+            <h2>Manage Lists</h2>
+            <p>Rename or delete saved options without deleting your spool records.</p>
+
+            <h3>Brands</h3>
+            {brands.map(brand => (
+              <div key={brand} className="form-actions">
+                <span>{brand}</span>
+                <button type="button" className="secondary" onClick={() => renameListItem('brand', brand)}>Rename</button>
+                <button type="button" className="secondary" onClick={() => deleteListItem('brand', brand)}>Delete</button>
+              </div>
+            ))}
+
+            <h3>Materials</h3>
+            {materials.map(material => (
+              <div key={material} className="form-actions">
+                <span>{material}</span>
+                <button type="button" className="secondary" onClick={() => renameListItem('material', material)}>Rename</button>
+                <button type="button" className="secondary" onClick={() => deleteListItem('material', material)}>Delete</button>
+              </div>
+            ))}
+
+            <h3>Colors</h3>
+            {colors.map(color => (
+              <div key={color} className="form-actions">
+                <span>{color}</span>
+                <button type="button" className="secondary" onClick={() => renameListItem('color', color)}>Rename</button>
+                <button type="button" className="secondary" onClick={() => deleteListItem('color', color)}>Delete</button>
+              </div>
+            ))}
+          </section>
+        )}
 
         {showForm && (
           <div className="modal">

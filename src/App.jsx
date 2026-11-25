@@ -44,6 +44,17 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('filamentMaterials', JSON.stringify(materials));
   }, [materials]);
+  const [brands, setBrands] = useState(() => {
+  try {
+    return JSON.parse(localStorage.getItem('filamentBrands')) || [];
+  } catch {
+    return [];
+  }
+});
+
+useEffect(() => {
+  localStorage.setItem('filamentBrands', JSON.stringify(brands));
+}, [brands]);
   useEffect(() => {
     localStorage.setItem('filamentInventory', JSON.stringify(inventory));
   }, [inventory]);
@@ -71,6 +82,13 @@ if (
   !materials.includes(form.material.trim())
 ) {
   setMaterials(old => [...old, form.material.trim()]);
+}
+   const newBrand = form.brand.trim();
+
+if (newBrand && !brands.some(
+  brand => brand.toLowerCase() === newBrand.toLowerCase()
+)) {
+  setBrands(old => [...old, newBrand]);
 }
     if (!form.brand.trim() || !form.color.trim() ||
         weight <= 0 || cost < 0 || quantity <= 0) return;
@@ -208,9 +226,18 @@ setInventory(old => [...old, ...newSpools]);
             <form className="form" onSubmit={addFilament}>
               <h2>Add Filament</h2>
 
-              <label>Brand</label>
-              <input required value={form.brand}
-                onChange={e => setForm({...form, brand: e.target.value})} />
+             <label>Brand</label>
+<input
+  list="brand-options"
+  required
+  value={form.brand}
+  onChange={e => setForm({...form, brand: e.target.value})}
+/>
+<datalist id="brand-options">
+  {brands.map(brand => (
+    <option key={brand} value={brand} />
+  ))}
+</datalist>
 
               <label>Material</label>
               <div>

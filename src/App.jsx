@@ -83,16 +83,16 @@ if (
 ) {
   setMaterials(old => [...old, form.material.trim()]);
 }
-   const newBrand = form.brand.trim();
-
-if (newBrand && !brands.some(
-  brand => brand.toLowerCase() === newBrand.toLowerCase()
-)) {
-  setBrands(old => [...old, newBrand]);
-}
+   
     if (!form.brand.trim() || !form.color.trim() ||
         weight <= 0 || cost < 0 || quantity <= 0) return;
+const newBrand = form.brand.trim();
 
+setBrands(old =>
+  old.some(b => b.toLowerCase() === newBrand.toLowerCase())
+    ? old
+    : [...old, newBrand]
+);
    const newSpools = Array.from({ length: quantity }, () => ({
   id: crypto.randomUUID(),
   brand: form.brand.trim(),
@@ -226,18 +226,36 @@ setInventory(old => [...old, ...newSpools]);
             <form className="form" onSubmit={addFilament}>
               <h2>Add Filament</h2>
 
-             <label>Brand</label>
-<input
-  list="brand-options"
+            <label>Brand</label>
+<select
+  value={brands.includes(form.brand) ? form.brand : '__custom__'}
+  onChange={e => {
+    if (e.target.value === '__custom__') {
+      setForm({...form, brand: ''});
+    } else {
+      setForm({...form, brand: e.target.value});
+    }
+  }}
   required
-  value={form.brand}
-  onChange={e => setForm({...form, brand: e.target.value})}
-/>
-<datalist id="brand-options">
+>
+  <option value="">Select Brand</option>
   {brands.map(brand => (
-    <option key={brand} value={brand} />
+    <option key={brand} value={brand}>{brand}</option>
   ))}
-</datalist>
+  <option value="__custom__">+ Add New Brand</option>
+</select>
+
+{(!brands.includes(form.brand) || form.brand === '') && (
+  <input
+    required
+    placeholder="Type new brand"
+    value={form.brand}
+    onChange={e => setForm({...form, brand: e.target.value})}
+  />
+)}
+
+
+This gives you a visible dropdown of saved brands and a field for
 
               <label>Material</label>
               <div>

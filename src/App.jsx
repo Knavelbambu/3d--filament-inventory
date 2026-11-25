@@ -341,7 +341,7 @@ This gives you a visible dropdown of saved brands and a field for
       setForm({...form, colorHex: e.target.value})
     }
   />
-  <span>{form.colorHex.toUpperCase()}</span>
+  <span>{(form.colorHex || '#808080').toUpperCase()}</span>
 </div>
               <label>Original spool weight (grams)</label>
               <input required type="number" min="1" value={form.weight}

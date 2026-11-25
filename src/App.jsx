@@ -16,6 +16,7 @@ export default function App() {
 const [brandFilter, setBrandFilter] = useState('');
 const [materialFilter, setMaterialFilter] = useState('');
 const [colorFilter, setColorFilter] = useState('');
+  const [sortBy, setSortBy] = useState('brand');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
@@ -286,7 +287,26 @@ colorHex: '#808080',
     matchesColor
   );
 });
-
+const sorted = [...filtered].sort((a, b) => {
+  switch (sortBy) {
+    case 'brand':
+      return a.brand.localeCompare(b.brand);
+    case 'material':
+      return a.material.localeCompare(b.material);
+    case 'color':
+      return a.color.localeCompare(b.color);
+    case 'most':
+      return b.remaining - a.remaining;
+    case 'least':
+      return a.remaining - b.remaining;
+    case 'highest':
+      return b.cost - a.cost;
+    case 'lowest':
+      return a.cost - b.cost;
+    default:
+      return 0;
+  }
+});
   const averageCost = {};
   inventory.forEach(item => {
     const key = `${item.brand}|||${item.material}`;
@@ -393,10 +413,22 @@ colorHex: '#808080',
           <option key={color} value={color}>{color}</option>
         ))}
       </select>
+   <select
+  value={sortBy}
+  onChange={e => setSortBy(e.target.value)}
+>
+  <option value="brand">Brand (A-Z)</option>
+  <option value="material">Material (A-Z)</option>
+  <option value="color">Color (A-Z)</option>
+  <option value="most">Most Remaining</option>
+  <option value="least">Least Remaining</option>
+  <option value="highest">Highest Cost</option>
+  <option value="lowest">Lowest Cost</option>
+</select>
     </div>
 
     <InventoryTable
-      items={filtered}
+      items={sorted}
       onEdit={handleEdit}
       onDelete={handleDelete}
     />

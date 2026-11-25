@@ -422,11 +422,16 @@ colorHex: '#808080',
                 onChange={e => setForm({...form, quantity: e.target.value})} />
 
               <div className="form-actions">
-                <button type="button" className="secondary"
-                  onClick={() => {
-  setShowForm(false);
-  setEditingId(null);
-}}ShowForm(false)}>Cancel</button>
+               <button
+  type="button"
+  className="secondary"
+  onClick={() => {
+    setShowForm(false);
+    setEditingId(null);
+  }}
+>
+  Cancel
+</button>
                 <button className="primary" type="submit">Save Filament</button>
               </div>
             </form>

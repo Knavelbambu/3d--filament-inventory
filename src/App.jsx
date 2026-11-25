@@ -36,7 +36,7 @@ colorHex: '#808080',
         localStorage.getItem('filamentMaterials')
       ) || [];
 
-      return [...new Set([...defaults, ...saved])];
+      return saved.length > 0 ? saved : defaults;
     } catch {
       return defaults;
     }

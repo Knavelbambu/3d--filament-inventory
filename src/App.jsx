@@ -50,16 +50,18 @@ export default function App() {
     if (!form.brand.trim() || !form.color.trim() ||
         weight <= 0 || cost < 0 || quantity <= 0) return;
 
-    setInventory(old => [...old, {
-      id: crypto.randomUUID(),
-      brand: form.brand.trim(),
-      material: form.material,
-      color: form.color.trim(),
-      weight,
-      remaining: weight,
-      cost,
-      quantity
-    }]);
+   const newSpools = Array.from({ length: quantity }, () => ({
+  id: crypto.randomUUID(),
+  brand: form.brand.trim(),
+  material: form.material,
+  color: form.color.trim(),
+  weight,
+  remaining: weight,
+  cost,
+  quantity: 1
+}));
+
+setInventory(old => [...old, ...newSpools]);
 
     setForm({
       brand: '',

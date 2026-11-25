@@ -423,7 +423,7 @@ colorHex: '#808080',
 
               <div className="form-actions">
                 <button type="button" className="secondary"
-                  onClick={() => setonClick={() => {
+                  onClick={() => {
   setShowForm(false);
   setEditingId(null);
 }}ShowForm(false)}>Cancel</button>

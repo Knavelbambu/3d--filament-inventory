@@ -104,6 +104,13 @@ setBrands(old =>
     ? old
     : [...old, newBrand]
 );
+    const newColor = form.color.trim();
+
+setColors(old =>
+  old.some(c => c.toLowerCase() === newColor.toLowerCase())
+    ? old
+    : [...old, newColor]
+);
    const newSpools = Array.from({ length: quantity }, () => ({
   id: crypto.randomUUID(),
   brand: form.brand.trim(),
@@ -297,9 +304,32 @@ This gives you a visible dropdown of saved brands and a field for
 </div>
 
               <label>Color</label>
-              <input required value={form.color}
-                onChange={e => setForm({...form, color: e.target.value})} />
+<select
+  value={colors.includes(form.color) ? form.color : '__custom__'}
+  onChange={e => {
+    if (e.target.value === '__custom__') {
+      setForm({...form, color: ''});
+    } else {
+      setForm({...form, color: e.target.value});
+    }
+  }}
+  required
+>
+  <option value="">Select Color</option>
+  {colors.map(color => (
+    <option key={color} value={color}>{color}</option>
+  ))}
+  <option value="__custom__">+ Add New Color</option>
+</select>
 
+{(!colors.includes(form.color) || form.color === '') && (
+  <input
+    required
+    placeholder="Type new color"
+    value={form.color}
+    onChange={e => setForm({...form, color: e.target.value})}
+  />
+)}
               <label>Original spool weight (grams)</label>
               <input required type="number" min="1" value={form.weight}
                 onChange={e => setForm({...form, weight: e.target.value})} />

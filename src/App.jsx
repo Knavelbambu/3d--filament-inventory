@@ -195,6 +195,72 @@ colorHex: '#808080',
 
     setInventory(old => old.filter(item => item.id !== id));
   }
+  function renameListItem(type, oldValue) {
+    const newValue = window.prompt(
+      `Rename ${type}:`,
+      oldValue
+    );
+
+    if (!newValue || !newValue.trim()) return;
+
+    const trimmed = newValue.trim();
+
+    const currentList =
+      type === 'brand' ? brands :
+      type === 'material' ? materials :
+      colors;
+
+    if (
+      currentList.some(
+        value =>
+          value.toLowerCase() === trimmed.toLowerCase() &&
+          value !== oldValue
+      )
+    ) {
+      window.alert('That option already exists.');
+      return;
+    }
+
+    if (type === 'brand') {
+      setBrands(old => old.map(value =>
+        value === oldValue ? trimmed : value
+      ));
+    } else if (type === 'material') {
+      setMaterials(old => old.map(value =>
+        value === oldValue ? trimmed : value
+      ));
+    } else {
+      setColors(old => old.map(value =>
+        value === oldValue ? trimmed : value
+      ));
+    }
+
+    setInventory(old => old.map(item =>
+      item[type] === oldValue
+        ? { ...item, [type]: trimmed }
+        : item
+    ));
+  }
+
+  function deleteListItem(type, value) {
+    const usedCount = inventory.filter(
+      item => item[type] === value
+    ).length;
+
+    const warning = usedCount > 0
+      ? `This option is used by ${usedCount} spool record(s). The spools will NOT be deleted. Continue?`
+      : 'Delete this saved option?';
+
+    if (!window.confirm(warning)) return;
+
+    if (type === 'brand') {
+      setBrands(old => old.filter(item => item !== value));
+    } else if (type === 'material') {
+      setMaterials(old => old.filter(item => item !== value));
+    } else {
+      setColors(old => old.filter(item => item !== value));
+    }
+  }
   const filtered = inventory.filter(item =>
     `${item.brand} ${item.material} ${item.color}`
       .toLowerCase().includes(search.toLowerCase())
@@ -298,13 +364,26 @@ colorHex: '#808080',
           </section>
         )}
 
-        {page === 'Settings' && (
-          <section className="panel">
-            <h2>Settings</h2>
-            <p>Inventory data is currently saved in this browser.</p>
-            <p>Windows 11 companion integration: Planned.</p>
-          </section>
-        )}
+        <h3>Colors</h3>
+    {colors.map(color => (
+      <div key={color} className="form-actions">
+        <span>{color}</span>
+        <button
+          className="secondary"
+          onClick={() => renameListItem('color', color)}
+        >
+          Rename
+        </button>
+        <button
+          className="secondary"
+          onClick={() => deleteListItem('color', color)}
+        >
+          Delete
+        </button>
+      </div>
+    ))}
+  </section>
+)}
 
         {showForm && (
           <div className="modal">

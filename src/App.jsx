@@ -158,7 +158,7 @@ export default function App() {
           <section className="panel">
             <h2>Connected Printers</h2>
             <div className="printer">
-              <strong>Bambu Lab P1S + AMS</strong>
+              <strong>Bambu Lab P2S + AMS 2 pro</strong>
               <p>Automatic usage tracking: Planned</p>
             </div>
             <div className="printer">

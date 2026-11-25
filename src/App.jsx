@@ -128,6 +128,7 @@ setInventory(old => [...old, ...newSpools]);
       brand: '',
       material: 'PLA',
       color: '',
+colorHex: '#808080',
       weight: '1000',
       cost: '',
       quantity: '1'

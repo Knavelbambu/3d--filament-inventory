@@ -14,7 +14,7 @@ export default function App() {
   const [page, setPage] = useState('Dashboard');
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
-
+  const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
     brand: '',
     material: 'PLA',
@@ -138,7 +138,63 @@ colorHex: '#808080',
 
     setShowForm(false);
   }
+  function updateFilament(e) {
+  e.preventDefault();
 
+  const weight = Number(form.weight);
+  const cost = Number(form.cost);
+
+  if (
+    !form.brand.trim() ||
+    !form.material.trim() ||
+    !form.color.trim() ||
+    weight <= 0 ||
+    cost < 0
+  ) {
+    return;
+  }
+
+  setInventory(old =>
+    old.map(item =>
+      item.id === editingId
+        ? {
+            ...item,
+            brand: form.brand.trim(),
+            material: form.material.trim(),
+            color: form.color.trim(),
+            colorHex: form.colorHex,
+            weight,
+            cost
+          }
+        : item
+    )
+  );
+
+  setEditingId(null);
+  setShowForm(false);
+}
+  function handleEdit(item) {
+    setForm({
+      brand: item.brand,
+      material: item.material,
+      color: item.color,
+      colorHex: item.colorHex || '#808080',
+      weight: String(item.weight),
+      cost: String(item.cost),
+      quantity: '1'
+    });
+
+    setEditingId(item.id);
+    setShowForm(true);
+  }
+
+  function handleDelete(id) {
+    if (!window.confirm('Delete this spool? This cannot be undone.')) {
+      return;
+    }
+
+    setInventory(old => old.filter(item => item.id !== id));
+  }
   const filtered = inventory.filter(item =>
     `${item.brand} ${item.material} ${item.color}`
       .toLowerCase().includes(search.toLowerCase())
@@ -252,8 +308,11 @@ colorHex: '#808080',
 
         {showForm && (
           <div className="modal">
-            <form className="form" onSubmit={addFilament}>
-              <h2>Add Filament</h2>
+            <form
+  className="form"
+  onSubmit={editingId ? updateFilament : addFilament}
+>
+              <h2>{editingId ? 'Edit Filament' : 'Add Filament'}</h2>
 
             <label>Brand</label>
 <select
@@ -364,7 +423,10 @@ colorHex: '#808080',
 
               <div className="form-actions">
                 <button type="button" className="secondary"
-                  onClick={() => setShowForm(false)}>Cancel</button>
+                  onClick={() => setonClick={() => {
+  setShowForm(false);
+  setEditingId(null);
+}}ShowForm(false)}>Cancel</button>
                 <button className="primary" type="submit">Save Filament</button>
               </div>
             </form>
@@ -388,6 +450,7 @@ function InventoryTable({ items, onEdit, onDelete }) {
             <th>Color</th>
             <th>Remaining</th>
             <th>Purchase Price</th>
+        <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -412,6 +475,23 @@ function InventoryTable({ items, onEdit, onDelete }) {
 </td>
               <td>{item.remaining} g</td>
               <td>${item.cost.toFixed(2)}</td>
+           <td>
+  <button
+    type="button"
+    className="secondary"
+    onClick={() => onEdit(item)}
+  >
+    Edit
+  </button>
+
+  <button
+    type="button"
+    className="secondary"
+    onClick={() => onDelete(item.id)}
+  >
+    Delete
+  </button>
+</td>
             </tr>
           ))}
         </tbody>

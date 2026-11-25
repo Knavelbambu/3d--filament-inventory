@@ -188,13 +188,33 @@ setInventory(old => [...old, ...newSpools]);
                 onChange={e => setForm({...form, brand: e.target.value})} />
 
               <label>Material</label>
-              <select value={form.material}
-                onChange={e => setForm({...form, material: e.target.value})}>
-                {['PLA', 'PLA+', 'PETG', 'PETG HF', 'ABS', 'ASA',
-                  'TPU', 'PA', 'PC', 'PVA', 'Other'].map(m =>
-                  <option key={m}>{m}</option>
-                )}
-              </select>
+              <div>
+  <select
+    value={form.material}
+    onChange={e => {
+      if (e.target.value === '__custom__') {
+        setForm({...form, material: ''});
+      } else {
+        setForm({...form, material: e.target.value});
+      }
+    }}
+  >
+    {['PLA', 'PLA+', 'PLA 2.0', 'PETG', 'PETG HF',
+      'PETG 2.0', 'ABS', 'ASA', 'TPU', 'PA', 'PC',
+      'PVA', 'Other'].map(m =>
+      <option key={m} value={m}>{m}</option>
+    )}
+    <option value="__custom__">+ Add New Material Type</option>
+  </select>
+
+  {form.material === '' && (
+    <input
+      type="text"
+      placeholder="Type new material (e.g. PLA 2.0)"
+      onChange={e => setForm({...form, material: e.target.value})}
+    />
+  )}
+</div>
 
               <label>Color</label>
               <input required value={form.color}

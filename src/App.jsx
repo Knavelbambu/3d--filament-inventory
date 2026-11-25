@@ -55,6 +55,17 @@ export default function App() {
 useEffect(() => {
   localStorage.setItem('filamentBrands', JSON.stringify(brands));
 }, [brands]);
+  const [colors, setColors] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('filamentColors')) || [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('filamentColors', JSON.stringify(colors));
+  }, [colors]);
   useEffect(() => {
     localStorage.setItem('filamentInventory', JSON.stringify(inventory));
   }, [inventory]);

@@ -389,7 +389,21 @@ function InventoryTable({ items }) {
             <tr key={item.id}>
               <td>{item.brand}</td>
               <td>{item.material}</td>
-              <td>{item.color}</td>
+              <td>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <span
+      style={{
+        display: 'inline-block',
+        width: '20px',
+        height: '20px',
+        borderRadius: '4px',
+        backgroundColor: item.colorHex || '#808080',
+        border: '1px solid #999'
+      }}
+    />
+    {item.color}
+  </div>
+</td>
               <td>{item.remaining} g</td>
               <td>${item.cost.toFixed(2)}</td>
             </tr>

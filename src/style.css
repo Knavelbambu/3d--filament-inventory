@@ -1,0 +1,21 @@
+ }
+}
+
+@media (max-width: 550px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .panel-heading, .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -116,6 +116,7 @@ setColors(old =>
   brand: form.brand.trim(),
   material: form.material,
   color: form.color.trim(),
+  colorHex: form.colorHex,
   weight,
   remaining: weight,
   cost,
@@ -331,6 +332,17 @@ This gives you a visible dropdown of saved brands and a field for
     onChange={e => setForm({...form, color: e.target.value})}
   />
 )}
+<label>Choose Actual Color</label>
+<div className="color-picker-row">
+  <input
+    type="color"
+    value={form.colorHex}
+    onChange={e =>
+      setForm({...form, colorHex: e.target.value})
+    }
+  />
+  <span>{form.colorHex.toUpperCase()}</span>
+</div>
               <label>Original spool weight (grams)</label>
               <input required type="number" min="1" value={form.weight}
                 onChange={e => setForm({...form, weight: e.target.value})} />

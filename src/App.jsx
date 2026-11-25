@@ -23,7 +23,27 @@ export default function App() {
     cost: '',
     quantity: '1'
   });
+ const [materials, setMaterials] = useState(() => {
+    const defaults = [
+      'PLA', 'PLA+', 'PLA 2.0', 'PETG', 'PETG HF',
+      'PETG 2.0', 'ABS', 'ASA', 'TPU', 'PA', 'PC',
+      'PVA', 'Other'
+    ];
 
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem('filamentMaterials')
+      ) || [];
+
+      return [...new Set([...defaults, ...saved])];
+    } catch {
+      return defaults;
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('filamentMaterials', JSON.stringify(materials));
+  }, [materials]);
   useEffect(() => {
     localStorage.setItem('filamentInventory', JSON.stringify(inventory));
   }, [inventory]);
@@ -46,7 +66,12 @@ export default function App() {
     const weight = Number(form.weight);
     const cost = Number(form.cost);
     const quantity = Number(form.quantity);
-
+if (
+  form.material.trim() &&
+  !materials.includes(form.material.trim())
+) {
+  setMaterials(old => [...old, form.material.trim()]);
+}
     if (!form.brand.trim() || !form.color.trim() ||
         weight <= 0 || cost < 0 || quantity <= 0) return;
 
@@ -190,7 +215,7 @@ setInventory(old => [...old, ...newSpools]);
               <label>Material</label>
               <div>
   <select
-    value={form.material}
+    value={materials.includes(form.material) ? form.material : '__custom__'}
     onChange={e => {
       if (e.target.value === '__custom__') {
         setForm({...form, material: ''});
@@ -199,18 +224,17 @@ setInventory(old => [...old, ...newSpools]);
       }
     }}
   >
-    {['PLA', 'PLA+', 'PLA 2.0', 'PETG', 'PETG HF',
-      'PETG 2.0', 'ABS', 'ASA', 'TPU', 'PA', 'PC',
-      'PVA', 'Other'].map(m =>
+    {materials.map(m => (
       <option key={m} value={m}>{m}</option>
-    )}
+    ))}
     <option value="__custom__">+ Add New Material Type</option>
   </select>
 
   {form.material === '' && (
     <input
       type="text"
-      placeholder="Type new material (e.g. PLA 2.0)"
+      placeholder="Type new material"
+      value={form.material}
       onChange={e => setForm({...form, material: e.target.value})}
     />
   )}

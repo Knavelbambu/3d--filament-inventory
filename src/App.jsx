@@ -13,6 +13,9 @@ export default function App() {
 
   const [page, setPage] = useState('Dashboard');
   const [search, setSearch] = useState('');
+const [brandFilter, setBrandFilter] = useState('');
+const [materialFilter, setMaterialFilter] = useState('');
+const [colorFilter, setColorFilter] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
@@ -261,9 +264,28 @@ colorHex: '#808080',
       setColors(old => old.filter(item => item !== value));
     }
   }
-  const filtered = inventory.filter(item =>
+  const filtered = inventory.filter(item => {
+  const matchesSearch =
     `${item.brand} ${item.material} ${item.color}`
-      .toLowerCase().includes(search.toLowerCase())
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+  const matchesBrand =
+    !brandFilter || item.brand === brandFilter;
+
+  const matchesMaterial =
+    !materialFilter || item.material === materialFilter;
+
+  const matchesColor =
+    !colorFilter || item.color === colorFilter;
+
+  return (
+    matchesSearch &&
+    matchesBrand &&
+    matchesMaterial &&
+    matchesColor
+  );
+});
   );
 
   const averageCost = {};
@@ -332,24 +354,55 @@ colorHex: '#808080',
           </>
         )}
 
-        {page === 'Inventory' && (
-          <section className="panel">
-            <div className="panel-heading">
-              <h2>Filament Inventory</h2>
-              <input
-                placeholder="Search brand, material or color..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
-            </div>
-            <InventoryTable
-  items={filtered}
-  onEdit={handleEdit}
-  onDelete={handleDelete}
-/>
-          </section>
-        )}
+       {page === 'Inventory' && (
+  <section className="panel">
+    <div className="panel-heading">
+      <h2>Filament Inventory</h2>
 
+      <input
+        placeholder="Search brand, material or color..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+
+      <select
+        value={brandFilter}
+        onChange={e => setBrandFilter(e.target.value)}
+      >
+        <option value="">All Brands</option>
+        {brands.map(brand => (
+          <option key={brand} value={brand}>{brand}</option>
+        ))}
+      </select>
+
+      <select
+        value={materialFilter}
+        onChange={e => setMaterialFilter(e.target.value)}
+      >
+        <option value="">All Materials</option>
+        {materials.map(material => (
+          <option key={material} value={material}>{material}</option>
+        ))}
+      </select>
+
+      <select
+        value={colorFilter}
+        onChange={e => setColorFilter(e.target.value)}
+      >
+        <option value="">All Colors</option>
+        {colors.map(color => (
+          <option key={color} value={color}>{color}</option>
+        ))}
+      </select>
+    </div>
+
+    <InventoryTable
+      items={filtered}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+    />
+  </section>
+)}
         {page === 'Printers' && (
           <section className="panel">
             <h2>Connected Printers</h2>

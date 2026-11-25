@@ -286,7 +286,6 @@ colorHex: '#808080',
     matchesColor
   );
 });
-  );
 
   const averageCost = {};
   inventory.forEach(item => {
